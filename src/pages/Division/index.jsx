@@ -78,7 +78,7 @@ const Division = () => {
                 <div className="icon-container">
                   <img src={noteBookIcon} alt="" />
                 </div>
-                <a>
+                <a href="/">
                   <p>2 Journal entries</p>
                 </a>
               </div>
@@ -89,7 +89,7 @@ const Division = () => {
                 <p>24 fingerprints enrolled</p>
               </div>
             </div>
-            <div class="summary-card">
+            <div class="summary-card no-shadow">
               <div className="summary-header">
                 <div className="card-icon">
                   <img src={megaphoneIcon} alt="" />

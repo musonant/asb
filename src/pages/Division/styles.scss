@@ -15,6 +15,10 @@
     padding: 15px;
     margin-bottom: 20px;
 
+    &.no-shadow {
+      box-shadow: none;
+    }
+
     .card-icon {
       background-color: #00A2D6;
       border-radius: 6px;
