@@ -24,10 +24,10 @@ const Header = () => {
       </nav>
       <div className="header-actions">
         <SearchBar />
-        <a className="notification">
+        <a className="notification" href="/">
           <img src={bellIcon} alt="" />
         </a>
-        <a className="avatar-button">
+        <a className="avatar-button" href="/">
           <Avatar />
           <img className="caret-icon" src={caretDownIcon} alt="" />
         </a>
