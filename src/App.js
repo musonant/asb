@@ -1,9 +1,10 @@
 import './App.scss';
+import Division from './pages/Division';
 
 const App = () => {
   return (
     <div className="App">
-      ASB Frontend Engineering Test
+      <Division />
     </div>
   );
 }

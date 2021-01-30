@@ -1,0 +1,18 @@
+.main-search-bar {
+  border: 1px solid #DCE1E7;
+  border-radius: 4px;
+  height: 36px;
+  overflow: hidden;
+  display: flex;
+  padding-left: 10px;
+  width: 176px;
+  
+  input {
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+}

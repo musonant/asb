@@ -1,8 +1,12 @@
 import React from 'react';
+import './styles.scss';
+import userIcon from '../../assets/icons/user.svg';
 
 const Avatar = () => {
   return (
-    <h1>Avatar</h1>
+    <div className="avatar">
+      <img src={userIcon} alt="" />
+    </div>
   )
 };
 
