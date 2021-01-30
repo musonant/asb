@@ -1,3 +1,124 @@
-.page-wrapper {
+@import '../../styles/variables.scss';
+
+.division-page {
   padding: 20px 20px 0 20px;
+
+  .page-content {
+    display: flex;
+
+    .side-bar {
+      width: 20%;
+    }
+  }
+  .summary-card {
+    box-shadow: $card-box-shadow;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    .card-icon {
+      background-color: #00A2D6;
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px;
+    }
+    .summary-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .summary-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .summary-info-row {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      font-weight: 500;
+
+      .icon-container {
+        width: 20px;
+        margin-right: 10px;
+        display: flex;
+        justify-content: center;
+      }
+
+      p {
+        color: #0F1A4F;
+        font-size: 14px;
+      }
+
+      a {
+        p {
+          color: #5771EE;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .timeline-item {
+      color: #747474;
+      font-size: 12px;
+      font-weight: 500;
+      position: relative;
+      padding-left: 20px;
+      padding-bottom: 20px;
+
+      &:not(:last-child)::before {
+        content: ' ';
+        position: absolute;
+        top: 10px;
+        left: 0;
+        height: 100%;
+        margin-top: 5px;
+        margin-left: 6px;
+        border-right: 1px dashed #C4C4C4;
+      }
+
+      &::after {
+        content: '●';
+        color: #707070;
+        font-size: 22px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .meta-text {
+        color: #A1AACE;
+        margin-top: 10px;
+      }
+      .bullet-text::before {
+        content: '●';
+        font-size: 10px;
+        color: #C4C4C4;
+        margin: 0 5px;
+      }
+    }
+  }
+
+  
+  @media screen and (min-width: $break-point-tablet) {
+    .number-card-list {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -20px;
+    }
+    .number-card-item {
+      width: 33.33%;
+      padding-right: 20px;
+    }
+  }
+
+  @media screen and (min-width: $break-point-desktop) {
+    .number-card-item {
+      width: 20%;
+      padding-right: 20px;
+    }
+  }
 }
