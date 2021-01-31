@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import './styles.scss';
 import Header from '../../components/Header';
 import BreadCrumb from '../../components/Breadcrumb';
@@ -16,8 +18,40 @@ import lowRiskIcon from '../../assets/icons/arrow-bottom-right.svg';
 import midRiskIcon from '../../assets/icons/arrow-right.svg';
 import highRiskIcon from '../../assets/icons/arrow-up.svg';
 import menuVerticalIcon from '../../assets/icons/menu-vertical.svg';
+import { fetchUsers } from '../../store/user';
+import Loader from '../../components/Loader';
 
 const Division = () => {
+  const dispatch = useDispatch();
+  const { users } = useSelector(state => state.user);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const result = await dispatch(fetchUsers());
+      setIsLoading(false);
+    };
+    fetchAllUsers();
+  }, []);
+
+  const toggleUserSelect = (userId) => {
+    const userExists = selectedUsers.find(id => id === userId);
+    if (!userExists) {
+      return setSelectedUsers([...selectedUsers, userId]);
+    }
+    setSelectedUsers(selectedUsers.filter(id => id !== userId));
+  };
+
+  const toggleAllUserSelect = () => {
+    if (selectedUsers.length > 0) {
+      return setSelectedUsers([]);
+    }
+    const newSelection = users.map(user => user.id);
+    setSelectedUsers(newSelection);
+  }
+
   const breadCrumbTree = [
     {
       label: 'Divisions',
@@ -134,7 +168,7 @@ const Division = () => {
               <thead>
                 <tr className="header-row">
                   <th>
-                    <input type="checkbox" />
+                    <input type="checkbox" checked={selectedUsers.length === users.length} onClick={toggleAllUserSelect} />
                   </th>
                   <th>
                   </th>
@@ -146,101 +180,75 @@ const Division = () => {
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="No issues" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">19 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={lowRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text low">Low Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="2 issues" type="warning" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">10 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={midRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text mid">Mid Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="2 issues" type="warning" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">10 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={highRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text mid">High Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
+              {isLoading ? (
+                <tbody>
+                  <tr>
+                    <td colSpan="8" className="loading-area">
+                      <Loader />
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  {users.map(({ id, name, state, address, issuesCount, uniqueEntriesCount, entriesType, riskLevel }) => {
+                    const riskOptions = {
+                      0: {
+                        icon: lowRiskIcon,
+                        text: 'Low Risk',
+                        className: 'low',
+                      },
+                      1: {
+                        icon: midRiskIcon,
+                        text: 'Mid Risk',
+                        className: 'mid',
+                      },
+                      2: {
+                        icon: highRiskIcon,
+                        text: 'High Risk',
+                        className: 'high',
+                      },
+                    };
+                    const riskEvaluation = riskOptions[riskLevel];
+                    const isSelected = selectedUsers.find(userId => userId === id);
+
+                    return (
+                      <tr className={isSelected ? 'selected' : ''} key={id}>
+                        <td>
+                          <input type="checkbox" checked={isSelected} onClick={() => toggleUserSelect(id)} />
+                        </td>
+                        <td>
+                          <img src={caretDownOIcon} alt="verified" />
+                        </td>
+                        <td>
+                          {name}
+                        </td>
+                        <td className="location">
+                          <p className="state">{state}</p>
+                          <p className="address-line">{address}</p>
+                        </td>
+                        <td>
+                          <Tag label={`${issuesCount} ${issuesCount === 1 ? 'issue' : 'issues'}`} type={issuesCount > 0 ? 'warning' : 'primary'} />
+                        </td>
+                        <td className="entries">
+                          <p className="count">{uniqueEntriesCount > 1 ? `${uniqueEntriesCount} unique entries` : `${uniqueEntriesCount === 1 ? '1' : 'No'} unique entry`}</p>
+                          <p className="type">{entriesType}</p>
+                        </td>
+                        <td>
+                          <img src={riskEvaluation.icon} className="risk-arrow" alt="" />
+                          <span className={`risk-text ${riskEvaluation.className}`}>
+                            {riskEvaluation.text}
+                          </span>
+                        </td>
+                        <td>
+                          <a href="/">
+                            <img src={menuVerticalIcon} className="risk-arrow" alt="" />
+                          </a>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              )}
             </table>
           </main>
         </div>

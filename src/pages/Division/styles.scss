@@ -116,6 +116,16 @@
     border-spacing: 0;
     width: 100%;
     box-shadow: $card-box-shadow;
+    position: relative;
+
+    tr.selected {
+      background-color: #e4e4e4;
+    }
+
+    .loading-area {
+      position: relative;
+      height: 60px;
+    }
 
     .header-row {
       background: #F3F6F9;
@@ -157,6 +167,7 @@
       .type {
         color: #878592;
         margin-top: 3px;
+        text-transform: capitalize;
       }
     }
 
