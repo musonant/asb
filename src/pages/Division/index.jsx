@@ -209,6 +209,37 @@ const Division = () => {
                     </a>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
+                  <td>
+                    <img src={caretDownOIcon} alt="verified" />
+                  </td>
+                  <td>
+                    Courtney Henry
+                  </td>
+                  <td className="location">
+                    <p className="state">Lagos State</p>
+                    <p className="address-line">775 Rolling Green Rd.</p>
+                  </td>
+                  <td>
+                    <Tag label="2 issues" type="warning" />
+                  </td>
+                  <td className="entries">
+                    <p className="count">10 Unique Entries</p>
+                    <p className="type">Homogenous</p>
+                  </td>
+                  <td>
+                    <img src={highRiskIcon} className="risk-arrow" alt="" />
+                    <span className="risk-text mid">High Risk</span>
+                  </td>
+                  <td>
+                    <a href="/">
+                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
+                    </a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </main>
