@@ -1,4 +1,4 @@
-import './App.scss';
+import './styles/main.scss';
 import Division from './pages/Division';
 
 const App = () => {

@@ -1,0 +1,23 @@
+@import '../../styles/variables.scss';
+
+.number-summary-card {
+  box-shadow: $card-box-shadow;
+  padding: 30px 20px;
+  border-radius: 6px;
+  display: flex;
+  margin-bottom: 20px;
+
+  .content {
+    flex: 1;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .sub-title {
+    color: #9696A0;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+}
