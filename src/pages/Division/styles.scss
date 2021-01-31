@@ -9,7 +9,13 @@
     .side-bar {
       width: 20%;
     }
+
+    .main-content {
+      flex: 1;
+      margin-left: 25px;
+    }
   }
+
   .summary-card {
     box-shadow: $card-box-shadow;
     padding: 15px;
@@ -106,6 +112,70 @@
     }
   }
 
+  table {
+    border-spacing: 0;
+    width: 100%;
+    box-shadow: $card-box-shadow;
+
+    .header-row {
+      background: #F3F6F9;
+      color: #899198;
+      font-size: 12px;
+      text-transform: uppercase;
+      border: none;
+      padding: 20px;
+      text-align: left;
+    }
+    th {
+      padding: 15px 10px;
+      font-weight: 500;
+    }
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid #F3F6F9;
+      font-size: 14px;
+    }
+
+    .location {
+      font-size: 12px;
+      font-weight: 500;
+      .address-line {
+        color: #878592;
+        margin-top: 3px;
+      }
+    }
+
+    .entries {
+      font-size: 12px;
+      font-weight: 500;
+      .count {
+        &::before {
+          content: '●';
+          margin-right: 3px; 
+        }
+      }
+      .type {
+        color: #878592;
+        margin-top: 3px;
+      }
+    }
+
+    .risk-arrow {
+      margin-right: 8px;
+    }
+    .risk-text {
+      font-size: 14px;
+      &.low {
+        color: #3AB65C;
+      }
+      &.mid {
+        color: #3C3AB6;
+      }
+      &.high {
+        color: #B63A3A;
+      }
+    }
+  }
   
   @media screen and (min-width: $break-point-tablet) {
     .number-card-list {

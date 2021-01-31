@@ -10,6 +10,12 @@ import envelopeIcon from '../../assets/icons/envelope.svg';
 import locationMarkerIcon from '../../assets/icons/location-marker.svg';
 import noteBookIcon from '../../assets/icons/note-book.svg';
 import fingerPrintIcon from '../../assets/icons/finger-print.svg';
+import caretDownOIcon from '../../assets/icons/caret-down-o.svg';
+import Tag from '../../components/Tag';
+import lowRiskIcon from '../../assets/icons/arrow-bottom-right.svg';
+import midRiskIcon from '../../assets/icons/arrow-right.svg';
+import highRiskIcon from '../../assets/icons/arrow-up.svg';
+import menuVerticalIcon from '../../assets/icons/menu-vertical.svg';
 
 const Division = () => {
   const breadCrumbTree = [
@@ -47,7 +53,7 @@ const Division = () => {
         </div>
         <div className="page-content">
           <aside className="side-bar">
-            <div class="summary-card">
+            <div className="summary-card">
               <div className="summary-header">
                 <div className="card-icon">
                   <img src={castleIcon} alt="" />
@@ -89,7 +95,7 @@ const Division = () => {
                 <p>24 fingerprints enrolled</p>
               </div>
             </div>
-            <div class="summary-card no-shadow">
+            <div className="summary-card no-shadow">
               <div className="summary-header">
                 <div className="card-icon">
                   <img src={megaphoneIcon} alt="" />
@@ -123,8 +129,88 @@ const Division = () => {
               </div>
             </div>
           </aside>
-          <main>
-
+          <main className="main-content">
+            <table>
+              <thead>
+                <tr className="header-row">
+                  <th>
+                    <input type="checkbox" />
+                  </th>
+                  <th>
+                  </th>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Entries</th>
+                  <th>Risk Profile</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
+                  <td>
+                    <img src={caretDownOIcon} alt="verified" />
+                  </td>
+                  <td>
+                    Courtney Henry
+                  </td>
+                  <td className="location">
+                    <p className="state">Lagos State</p>
+                    <p className="address-line">775 Rolling Green Rd.</p>
+                  </td>
+                  <td>
+                    <Tag label="No issues" />
+                  </td>
+                  <td className="entries">
+                    <p className="count">19 Unique Entries</p>
+                    <p className="type">Homogenous</p>
+                  </td>
+                  <td>
+                    <img src={lowRiskIcon} className="risk-arrow" alt="" />
+                    <span className="risk-text low">Low Risk</span>
+                  </td>
+                  <td>
+                    <a href="/">
+                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="checkbox" />
+                  </td>
+                  <td>
+                    <img src={caretDownOIcon} alt="verified" />
+                  </td>
+                  <td>
+                    Courtney Henry
+                  </td>
+                  <td className="location">
+                    <p className="state">Lagos State</p>
+                    <p className="address-line">775 Rolling Green Rd.</p>
+                  </td>
+                  <td>
+                    <Tag label="2 issues" type="warning" />
+                  </td>
+                  <td className="entries">
+                    <p className="count">10 Unique Entries</p>
+                    <p className="type">Homogenous</p>
+                  </td>
+                  <td>
+                    <img src={midRiskIcon} className="risk-arrow" alt="" />
+                    <span className="risk-text mid">Mid Risk</span>
+                  </td>
+                  <td>
+                    <a href="/">
+                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </main>
         </div>
       </div>

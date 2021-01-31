@@ -20,7 +20,7 @@ const BreadCrumb = ({ tree = [] }) => {
   return (
     <div className="bread-crumb">
       {tree.map((item, index) => (
-        <span className="crumb-unit">
+        <span key={`${item.label}${index}`} className="crumb-unit">
           {index !== 0 && (
             <img src={caretRightIcon} alt="" />
           )}
