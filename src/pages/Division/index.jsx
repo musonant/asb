@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import './styles.scss';
 import Header from '../../components/Header';
 import BreadCrumb from '../../components/Breadcrumb';
@@ -16,8 +18,47 @@ import lowRiskIcon from '../../assets/icons/arrow-bottom-right.svg';
 import midRiskIcon from '../../assets/icons/arrow-right.svg';
 import highRiskIcon from '../../assets/icons/arrow-up.svg';
 import menuVerticalIcon from '../../assets/icons/menu-vertical.svg';
+import Loader from '../../components/Loader';
+import { fetchUsers } from '../../store/user';
+import { fetchMetricSummary } from '../../store/division';
 
 const Division = () => {
+  const dispatch = useDispatch();
+  const { users } = useSelector(state => state.user);
+  const { metricSummary } = useSelector(state => state.division);
+
+  const [isTableLoading, setIsTableLoading] = useState(true);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchUsers());
+        await dispatch(fetchMetricSummary());
+      } catch (err) {
+        console.log(err);
+      }
+      setIsTableLoading(false);
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const onChangeRowSelection = (e, id) => {
+    const checked = e.target.checked;
+    if (checked) {
+      return setSelectedUsers([...selectedUsers, id]);
+    }
+    setSelectedUsers(selectedUsers.filter(userId => userId !== id));
+  };
+
+  const onChangeTableSelection = () => {
+    if (selectedUsers.length > 0) {
+      return setSelectedUsers([]);
+    }
+    const newSelection = users.map(user => user.id);
+    setSelectedUsers(newSelection);
+  }
+
   const breadCrumbTree = [
     {
       label: 'Divisions',
@@ -34,23 +75,15 @@ const Division = () => {
       <Header />
       <div className="division-page">
         <BreadCrumb tree={breadCrumbTree} />
-        <div className="number-card-list">
-          <div className="number-card-item">
-            <NumberSummaryCard title="31452" subTitle="Ongoing metric" />
+        {!!metricSummary.length && (
+          <div className="number-card-list">
+            {metricSummary.map(item => (
+              <div className="number-card-item" key={item.type}>
+                <NumberSummaryCard title={item.value} subTitle={`${item.type} metric`} />
+              </div>
+            ))}
           </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="2344" subTitle="Past metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="14224" subTitle="Mixed metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="635" subTitle="Failed metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="11334" subTitle="Pending metric" />
-          </div>
-        </div>
+        )}
         <div className="page-content">
           <aside className="side-bar">
             <div className="summary-card">
@@ -134,7 +167,7 @@ const Division = () => {
               <thead>
                 <tr className="header-row">
                   <th>
-                    <input type="checkbox" />
+                    <input type="checkbox" checked={!!users.length && selectedUsers.length === users.length} onChange={onChangeTableSelection} />
                   </th>
                   <th>
                   </th>
@@ -146,101 +179,75 @@ const Division = () => {
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="No issues" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">19 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={lowRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text low">Low Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="2 issues" type="warning" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">10 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={midRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text mid">Mid Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <img src={caretDownOIcon} alt="verified" />
-                  </td>
-                  <td>
-                    Courtney Henry
-                  </td>
-                  <td className="location">
-                    <p className="state">Lagos State</p>
-                    <p className="address-line">775 Rolling Green Rd.</p>
-                  </td>
-                  <td>
-                    <Tag label="2 issues" type="warning" />
-                  </td>
-                  <td className="entries">
-                    <p className="count">10 Unique Entries</p>
-                    <p className="type">Homogenous</p>
-                  </td>
-                  <td>
-                    <img src={highRiskIcon} className="risk-arrow" alt="" />
-                    <span className="risk-text mid">High Risk</span>
-                  </td>
-                  <td>
-                    <a href="/">
-                      <img src={menuVerticalIcon} className="risk-arrow" alt="" />
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
+              {isTableLoading ? (
+                <tbody>
+                  <tr>
+                    <td colSpan="8" className="loading-area">
+                      <Loader />
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <tbody>
+                  {users.map(({ id, name, state, address, issuesCount, uniqueEntriesCount, entriesType, riskLevel }) => {
+                    const riskOptions = {
+                      0: {
+                        icon: lowRiskIcon,
+                        text: 'Low Risk',
+                        className: 'low',
+                      },
+                      1: {
+                        icon: midRiskIcon,
+                        text: 'Mid Risk',
+                        className: 'mid',
+                      },
+                      2: {
+                        icon: highRiskIcon,
+                        text: 'High Risk',
+                        className: 'high',
+                      },
+                    };
+                    const riskEvaluation = riskOptions[riskLevel];
+                    const isSelected = selectedUsers.find(userId => userId === id);
+
+                    return (
+                      <tr className={isSelected ? 'selected' : ''} key={id}>
+                        <td>
+                          <input onChange={(e) => onChangeRowSelection(e)} type="checkbox" checked={isSelected} />
+                        </td>
+                        <td>
+                          <img src={caretDownOIcon} alt="verified" />
+                        </td>
+                        <td>
+                          {name}
+                        </td>
+                        <td className="location">
+                          <p className="state">{state}</p>
+                          <p className="address-line">{address}</p>
+                        </td>
+                        <td>
+                          <Tag label={`${issuesCount} ${issuesCount === 1 ? 'issue' : 'issues'}`} type={issuesCount > 0 ? 'warning' : 'primary'} />
+                        </td>
+                        <td className="entries">
+                          <p className="count">{uniqueEntriesCount > 1 ? `${uniqueEntriesCount} unique entries` : `${uniqueEntriesCount === 1 ? '1' : 'No'} unique entry`}</p>
+                          <p className="type">{entriesType}</p>
+                        </td>
+                        <td>
+                          <img src={riskEvaluation.icon} className="risk-arrow" alt="" />
+                          <span className={`risk-text ${riskEvaluation.className}`}>
+                            {riskEvaluation.text}
+                          </span>
+                        </td>
+                        <td>
+                          <a href="/">
+                            <img src={menuVerticalIcon} className="risk-arrow" alt="" />
+                          </a>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              )}
             </table>
           </main>
         </div>
