@@ -8,7 +8,7 @@ const slice = createSlice({
     users: [],
   },
   reducers: {
-    fetchUsersSsuccess: (state, action) => {
+    fetchUsersSuccess: (state, action) => {
       state.users = action.payload.users;
     },
   },
@@ -17,12 +17,12 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-const {fetchUsersSsuccess} = slice.actions;
+const {fetchUsersSuccess} = slice.actions;
 
 export const fetchUsers = () => async (dispatch) => {
   try {
     const result = await api.get('/f2ccc878');
-    dispatch(fetchUsersSsuccess({ users: result.data }));
+    dispatch(fetchUsersSuccess({ users: result.data }));
     return result.data;
   } catch (err) {
     throw err;

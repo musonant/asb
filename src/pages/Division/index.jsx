@@ -18,33 +18,40 @@ import lowRiskIcon from '../../assets/icons/arrow-bottom-right.svg';
 import midRiskIcon from '../../assets/icons/arrow-right.svg';
 import highRiskIcon from '../../assets/icons/arrow-up.svg';
 import menuVerticalIcon from '../../assets/icons/menu-vertical.svg';
-import { fetchUsers } from '../../store/user';
 import Loader from '../../components/Loader';
+import { fetchUsers } from '../../store/user';
+import { fetchMetricSummary } from '../../store/division';
 
 const Division = () => {
   const dispatch = useDispatch();
   const { users } = useSelector(state => state.user);
+  const { metricSummary } = useSelector(state => state.division);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isTableLoading, setIsTableLoading] = useState(true);
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
-    const fetchAllUsers = async () => {
-      const result = await dispatch(fetchUsers());
-      setIsLoading(false);
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchUsers());
+        await dispatch(fetchMetricSummary());
+      } catch (err) {
+        console.log(err);
+      }
+      setIsTableLoading(false);
     };
-    fetchAllUsers();
-  }, []);
+    fetchData();
+  }, [dispatch]);
 
-  const toggleUserSelect = (userId) => {
-    const userExists = selectedUsers.find(id => id === userId);
-    if (!userExists) {
-      return setSelectedUsers([...selectedUsers, userId]);
+  const onChangeRowSelection = (e, id) => {
+    const checked = e.target.checked;
+    if (checked) {
+      return setSelectedUsers([...selectedUsers, id]);
     }
-    setSelectedUsers(selectedUsers.filter(id => id !== userId));
+    setSelectedUsers(selectedUsers.filter(userId => userId !== id));
   };
 
-  const toggleAllUserSelect = () => {
+  const onChangeTableSelection = () => {
     if (selectedUsers.length > 0) {
       return setSelectedUsers([]);
     }
@@ -68,23 +75,15 @@ const Division = () => {
       <Header />
       <div className="division-page">
         <BreadCrumb tree={breadCrumbTree} />
-        <div className="number-card-list">
-          <div className="number-card-item">
-            <NumberSummaryCard title="31452" subTitle="Ongoing metric" />
+        {!!metricSummary.length && (
+          <div className="number-card-list">
+            {metricSummary.map(item => (
+              <div className="number-card-item" key={item.type}>
+                <NumberSummaryCard title={item.value} subTitle={`${item.type} metric`} />
+              </div>
+            ))}
           </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="2344" subTitle="Past metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="14224" subTitle="Mixed metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="635" subTitle="Failed metric" />
-          </div>
-          <div className="number-card-item">
-            <NumberSummaryCard title="11334" subTitle="Pending metric" />
-          </div>
-        </div>
+        )}
         <div className="page-content">
           <aside className="side-bar">
             <div className="summary-card">
@@ -168,7 +167,7 @@ const Division = () => {
               <thead>
                 <tr className="header-row">
                   <th>
-                    <input type="checkbox" checked={selectedUsers.length === users.length} onClick={toggleAllUserSelect} />
+                    <input type="checkbox" checked={!!users.length && selectedUsers.length === users.length} onChange={onChangeTableSelection} />
                   </th>
                   <th>
                   </th>
@@ -180,7 +179,7 @@ const Division = () => {
                   <th></th>
                 </tr>
               </thead>
-              {isLoading ? (
+              {isTableLoading ? (
                 <tbody>
                   <tr>
                     <td colSpan="8" className="loading-area">
@@ -214,7 +213,7 @@ const Division = () => {
                     return (
                       <tr className={isSelected ? 'selected' : ''} key={id}>
                         <td>
-                          <input type="checkbox" checked={isSelected} onClick={() => toggleUserSelect(id)} />
+                          <input onChange={(e) => onChangeRowSelection(e)} type="checkbox" checked={isSelected} />
                         </td>
                         <td>
                           <img src={caretDownOIcon} alt="verified" />
