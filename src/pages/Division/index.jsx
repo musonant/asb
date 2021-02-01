@@ -219,7 +219,7 @@ const Division = () => {
                     return (
                       <tr className={isSelected ? 'selected' : ''} key={id}>
                         <td>
-                          <input onChange={(e) => onChangeRowSelection(e)} type="checkbox" checked={isSelected} />
+                          <input onChange={(e) => onChangeRowSelection(e, id)} type="checkbox" checked={isSelected} />
                         </td>
                         <td>
                           <img src={caretDownOIcon} alt="verified" />
