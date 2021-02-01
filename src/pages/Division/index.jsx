@@ -20,13 +20,15 @@ import highRiskIcon from '../../assets/icons/arrow-up.svg';
 import menuVerticalIcon from '../../assets/icons/menu-vertical.svg';
 import Loader from '../../components/Loader';
 import { fetchUsers } from '../../store/user';
-import { fetchMetricSummary } from '../../store/division';
+import { fetchDivisionSummary, fetchMetricSummary, fetchModuleHistory } from '../../store/division';
 
 const Division = () => {
   const dispatch = useDispatch();
   const { users } = useSelector(state => state.user);
-  const { metricSummary } = useSelector(state => state.division);
+  const { metricSummary, divisionSummary, moduleHistory } = useSelector(state => state.division);
 
+  const [isDivisionSummaryLoading, setIsDivisionSummaryLoading] = useState(true);
+  const [isModuleHistoryLoading, setIsModuleHistoryLoading] = useState(true);
   const [isTableLoading, setIsTableLoading] = useState(true);
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -35,10 +37,14 @@ const Division = () => {
       try {
         await dispatch(fetchUsers());
         await dispatch(fetchMetricSummary());
+        await dispatch(fetchDivisionSummary());
+        await dispatch(fetchModuleHistory());
       } catch (err) {
         console.log(err);
       }
       setIsTableLoading(false);
+      setIsDivisionSummaryLoading(false);
+      setIsModuleHistoryLoading(false);
     };
     fetchData();
   }, [dispatch]);
@@ -95,38 +101,46 @@ const Division = () => {
                   Division Summary
                 </h3>
               </div>
-              <div className="summary-info-row">
-                <div className="icon-container">
-                  <img src={phoneIcon} alt="" />
+              {isDivisionSummaryLoading ? (
+                <div className="summary-info-row">
+                  <Loader />
                 </div>
-                <p>0801 234 5678</p>
-              </div>
-              <div className="summary-info-row">
-                <div className="icon-container">
-                  <img src={envelopeIcon} alt="" />
-                </div>
-                <p>asbfefr@gmail.com</p>
-              </div>
-              <div className="summary-info-row">
-                <div className="icon-container">
-                  <img src={locationMarkerIcon} alt="" />
-                </div>
-                <p>Mojidi, Lagos</p>
-              </div>
-              <div className="summary-info-row">
-                <div className="icon-container">
-                  <img src={noteBookIcon} alt="" />
-                </div>
-                <a href="/">
-                  <p>2 Journal entries</p>
-                </a>
-              </div>
-              <div className="summary-info-row">
-                <div className="icon-container">
-                  <img src={fingerPrintIcon} alt="" />
-                </div>
-                <p>24 fingerprints enrolled</p>
-              </div>
+              ) : !!divisionSummary && (
+                <>
+                  <div className="summary-info-row">
+                    <div className="icon-container">
+                      <img src={phoneIcon} alt="" />
+                    </div>
+                    <p>{divisionSummary.phone}</p>
+                  </div>
+                  <div className="summary-info-row">
+                    <div className="icon-container">
+                      <img src={envelopeIcon} alt="" />
+                    </div>
+                    <p>{divisionSummary.email}</p>
+                  </div>
+                  <div className="summary-info-row">
+                    <div className="icon-container">
+                      <img src={locationMarkerIcon} alt="" />
+                    </div>
+                    <p>{divisionSummary.location}</p>
+                  </div>
+                  <div className="summary-info-row">
+                    <div className="icon-container">
+                      <img src={noteBookIcon} alt="" />
+                    </div>
+                    <a href="/">
+                      <p>{divisionSummary.entriesCount} Journal entries</p>
+                    </a>
+                  </div>
+                  <div className="summary-info-row">
+                    <div className="icon-container">
+                      <img src={fingerPrintIcon} alt="" />
+                    </div>
+                    <p>{divisionSummary.enrolledFingerprintsCount} fingerprints enrolled</p>
+                  </div>
+                </>
+              )}
             </div>
             <div className="summary-card no-shadow">
               <div className="summary-header">
@@ -138,27 +152,19 @@ const Division = () => {
                 </h3>
               </div>
               <div className="timeline">
-                <div className="timeline-item">
-                  <p>Searched “Journal Entries” on Division module</p>
-                  <p className="meta-text">
-                    <span>22:10 15/09/2020</span>
-                    <span className="bullet-text">Web</span>
-                  </p>
-                </div>
-                <div className="timeline-item">
-                  <p>Searched “Journal Entries” on Division module</p>
-                  <p className="meta-text">
-                    <span>22:10 15/09/2020</span>
-                    <span className="bullet-text">Web</span>
-                  </p>
-                </div>
-                <div className="timeline-item">
-                  <p>Searched “Journal Entries” on Division module</p>
-                  <p className="meta-text">
-                    <span>22:10 15/09/2020</span>
-                    <span className="bullet-text">Web</span>
-                  </p>
-                </div>
+                {isModuleHistoryLoading ? (
+                  <div className="timeline-loading-area">
+                    <Loader />
+                  </div>
+                ) : moduleHistory.map(item => (
+                  <div className="timeline-item">
+                    <p>{item.description}</p>
+                    <p className="meta-text">
+                      <span>{new Date(item.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} {new Date(item.createdAt).toLocaleDateString()}</span>
+                      <span className="bullet-text">{item.platform}</span>
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </aside>

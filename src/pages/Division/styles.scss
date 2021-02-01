@@ -50,6 +50,7 @@
       align-items: center;
       margin: 10px 0;
       font-weight: 500;
+      position: relative;
 
       .icon-container {
         width: 20px;
@@ -69,6 +70,10 @@
           text-decoration: underline;
         }
       }
+    }
+
+    .timeline .timeline-loading-area {
+      position: relative;
     }
 
     .timeline-item {
